@@ -1,26 +1,25 @@
-#define LED_PIN     2     // LED output
-#define REED_PIN    4     // Reed switch input
-#define PIR_PIN     13    // PIR sensor input
+#define REED_PIN 4   // GPIO connected to reed switch
+#define LED_PIN 2    // GPIO connected to LED (e.g., onboard LED)
 
 void setup() {
+  pinMode(REED_PIN, INPUT_PULLUP); // Reed switch between GND and pin
   pinMode(LED_PIN, OUTPUT);
-  pinMode(REED_PIN, INPUT);
-  pinMode(PIR_PIN, INPUT);
-
-  Serial.begin(115200); // Optional for debugging
+  Serial.begin(115200);
+  Serial.println("Reed Switch Door Sensor Started");
 }
 
 void loop() {
   int reedState = digitalRead(REED_PIN);
-  int pirState  = digitalRead(PIR_PIN);
 
-  // Logic: turn LED ON if door is open OR motion is detected
-  if (reedState == HIGH || pirState == HIGH) {
-    digitalWrite(LED_PIN, HIGH);  // Turn LED on
-    Serial.println("Triggered: Door Open or Motion Detected");
+  if (reedState == HIGH) {
+    // Door is OPEN
+    digitalWrite(LED_PIN, HIGH);
+    Serial.println("Door OPEN");
   } else {
-    digitalWrite(LED_PIN, LOW);   // Turn LED off
+    // Door is CLOSED
+    digitalWrite(LED_PIN, LOW);
+    Serial.println("Door CLOSED");
   }
 
-  delay(100); // Debounce or read interval
+  delay(200); // Small delay for stability
 }
